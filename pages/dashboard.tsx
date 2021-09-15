@@ -176,7 +176,10 @@ const Dashboard = () => {
                               }`}
                             >
                               <span className={`font-bold`}>Score:</span>{" "}
-                              {(d.score / d.course.questionNum) * 100}%
+                              {Math.round(
+                                (d.score / d.course.questionNum) * 100
+                              )}
+                              %
                             </span>
 
                             <span>

@@ -3,10 +3,16 @@ import { useTimer } from "react-timer-hook";
 //import { } from "react-page-visibility"
 
 export type TypeStatus = "success" | "warning" | "error";
+
+interface IUser {
+  id: string;
+  course: string;
+}
 export interface ExamTimerProps {
   expiryTime: number;
   onExpired: () => void;
   stopTime?: boolean;
+  user: IUser;
 }
 
 export interface ExamTimeTickProps {
@@ -20,8 +26,8 @@ const ExamTimeTick = ({ tick, status }: ExamTimeTickProps) => {
         status === "success"
           ? "text-primary"
           : status === "warning"
-          ? "text-ascent"
-          : "text-red-600 animate-ping"
+          ? "text-purple-700"
+          : "text-red-500"
       } duration-700 p-1 px-2 min-w-[36px] min-h-[36px]`}
     >
       {tick}
@@ -29,8 +35,13 @@ const ExamTimeTick = ({ tick, status }: ExamTimeTickProps) => {
   );
 };
 
-const ExamTimer = ({ expiryTime, onExpired, stopTime }: ExamTimerProps) => {
-  const [time, setTime] = useState<Date>(() => {
+const ExamTimer = ({
+  expiryTime,
+  onExpired,
+  stopTime,
+  user,
+}: ExamTimerProps) => {
+  const [time, _s] = useState<Date>(() => {
     const time = new Date();
     time.setSeconds(time.getSeconds() + expiryTime * 60);
     return time;
@@ -46,13 +57,23 @@ const ExamTimer = ({ expiryTime, onExpired, stopTime }: ExamTimerProps) => {
   });
 
   useEffect(() => {
+    //console.log(user);
     const t = localStorage.getItem("timer");
     if (t) {
-      const tt = new Date();
-      const parsedT: { min: number; sec: number } = JSON.parse(t);
-      tt.setSeconds(tt.getSeconds() + ((parsedT.min - 1) * 60 - parsedT.sec));
-      restart(tt);
+      const parsedT: { min: number; sec: number; user: IUser } = JSON.parse(t);
+      if (
+        parsedT.user &&
+        parsedT.user.id === user.id &&
+        parsedT.user.course === user.course
+      ) {
+        const tt = new Date();
+        tt.setSeconds(tt.getSeconds() + ((parsedT.min - 1) * 60 - parsedT.sec));
+        restart(tt);
+      } else {
+        localStorage.removeItem("timer");
+      }
     }
+    return () => pause();
   }, []);
 
   useEffect(() => {
@@ -74,7 +95,7 @@ const ExamTimer = ({ expiryTime, onExpired, stopTime }: ExamTimerProps) => {
       if (minutes > 0) {
         localStorage.setItem(
           "timer",
-          JSON.stringify({ min: minutes, sec: seconds })
+          JSON.stringify({ min: minutes, sec: seconds, user })
         );
       } else {
         localStorage.removeItem("timer");

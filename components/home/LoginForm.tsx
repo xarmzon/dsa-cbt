@@ -157,7 +157,7 @@ const LoginForm = ({ courses }) => {
         <Input
           name="phoneNumber"
           value={formData.phoneNumber.value}
-          type="number"
+          type="tel"
           showLabel
           labelValue="Phone Number"
           error={formData.phoneNumber.error}

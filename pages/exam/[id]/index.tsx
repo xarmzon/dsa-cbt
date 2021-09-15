@@ -95,7 +95,7 @@ const ExamPage = ({
         } catch (err) {
           setSubmitError(true);
           setSubmitText("Submit");
-          console.log(err);
+          //console.log(err);
         }
         break;
       default:
@@ -156,6 +156,7 @@ const ExamPage = ({
                 </p> */}
                 <div className="w-full flex flex-col justify-center items-center p-2">
                   <ExamTimer
+                    user={{id:student.id, course:course.id}}
                     stopTime={stopTime}
                     expiryTime={course.timeAllowed}
                     onExpired={submitAnswer}
