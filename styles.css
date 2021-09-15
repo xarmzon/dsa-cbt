@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind variants;
+
+@layer base {
+  @font-face {
+    font-family: "Nunito";
+    src: url("./public/assets/fonts/Nunito-Regular.ttf");
+  }
+  body {
+    @apply bg-gray-100 font-brand;
+  }
+}
+
+#nprogress .bar {
+  @apply bg-ascent-light;
+}
+
+/* #nprogress .peg {
+  box-shadow: 0 0 10px rgb(250, 209, 171), 0 0 5px rgb(250, 209, 171);
+}
+*/
+.ql-editor {
+  min-height: 100px;
+}
