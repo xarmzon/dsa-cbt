@@ -153,38 +153,40 @@ const Dashboard = () => {
                 dashboardData && dashboardData.recentResults?.length > 0
                   ? dashboardData.recentResults.map((d, i) => {
                       return {
-                        primaryText: d.student.fullName,
+                        primaryText: d?.student?.fullName,
                         secondaryText: (
                           <span className="flex flex-col text-gray-500">
                             <span className="space-x-2">
                               <span className="font-bold">Course:</span>{" "}
-                              {d.course.title}
+                              {d?.course?.title}
                             </span>
                             <span
                               className={`${
-                                (d.score / d.course.questionNum) * 100 >= 70
+                                (d?.score / d?.course?.questionNum) * 100 >= 70
                                   ? "text-green-600"
-                                  : (d.score / d.course.questionNum) * 100 <
+                                  : (d?.score / d?.course?.questionNum) * 100 <
                                       70 &&
-                                    (d.score / d.course.questionNum) * 100 >= 60
+                                    (d?.score / d?.course?.questionNum) * 100 >=
+                                      60
                                   ? "text-primary"
-                                  : (d.score / d.course.questionNum) * 100 <
+                                  : (d?.score / d?.course?.questionNum) * 100 <
                                       60 &&
-                                    (d.score / d.course.questionNum) * 100 >= 50
+                                    (d?.score / d?.course?.questionNum) * 100 >=
+                                      50
                                   ? "text-ascent"
                                   : "text-red-600"
                               }`}
                             >
                               <span className={`font-bold`}>Score:</span>{" "}
                               {Math.round(
-                                (d.score / d.course.questionNum) * 100
+                                (d?.score / d?.course?.questionNum) * 100
                               )}
                               %
                             </span>
 
                             <span>
                               <span className="font-bold">Date:</span>{" "}
-                              {dateformat(d.createdAt, "mediumDate")}
+                              {dateformat(d?.createdAt, "mediumDate")}
                             </span>
                           </span>
                         ),

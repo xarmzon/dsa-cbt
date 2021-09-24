@@ -14,6 +14,7 @@ export interface SelectProps {
   labelValue?: string;
   showLabel?: boolean;
   error?: boolean;
+  multiple?: boolean;
   onChange: (value) => void;
 }
 
@@ -31,6 +32,7 @@ const Select = (props: SelectProps) => {
         </label>
       )}
       <select
+        multiple={props.multiple || false}
         name={props.name}
         required={props.required ? true : false}
         className="bg-gray-200 border-none"

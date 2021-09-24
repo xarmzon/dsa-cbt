@@ -20,6 +20,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     switch (req.method) {
       case "POST":
+        await resultChecker(req, res);
         break;
       case "GET":
         await getResults(req, res);
@@ -50,7 +51,6 @@ const getResults = async (req: NextApiRequest, res: NextApiResponse) => {
     ? (req.query.search as string)
     : "";
 
-  //console.log(searchTerm);
   const filter = {
     match: null,
   };
@@ -61,7 +61,6 @@ const getResults = async (req: NextApiRequest, res: NextApiResponse) => {
         { phoneNumber: { $regex: searchTerm } },
       ],
     };
-    page = 0;
   }
   const pg = await getResultsData(page, limit, filter);
 
@@ -75,52 +74,6 @@ export const getResultsData = async (
 ) => {
   const { limit, offset } = getPagination(page, perPage);
 
-  //console.log(modelOptions);
-
-  // const pipelines = [
-  //   {
-  //     $lookup: {
-  //       from: "courses",
-  //       localField: "course",
-  //       foreignField: "_id",
-  //       as: "course",
-  //     },
-  //   },
-  //   {
-  //     $unwind: "$course",
-  //   },
-  //   {
-  //     $lookup: {
-  //       from: "students",
-  //       localField: "student",
-  //       foreignField: "_id",
-  //       as: "student",
-  //     },
-  //   },
-  //   {
-  //     $unwind: "$student",
-  //   },
-  //   { $match: modelOptions?.match ? modelOptions.match : {} },
-  //   {
-  //     $sort: { createdAt: -1 },
-  //   },
-  //   { $skip: offset },
-  //   { $limit: limit },
-  //   {
-  //     $project: {
-  //       _id: 1,
-  //       student: { fullName: 1, phoneNumber: 1 },
-  //       course: { title: 1 },
-  //       createdAt: 1,
-  //       score: {
-  //         $cond: [{ $gte: ["$score", 0] }, "$score", "0"],
-  //       },
-  //       status: {
-  //         $cond: [{ $gt: ["$score", -1] }, "Submitted", "Not Submitted"],
-  //       },
-  //     },
-  //   },
-  // ];
   const pipelines = [
     {
       $match: modelOptions?.match ? modelOptions.match : {},
@@ -170,7 +123,7 @@ export const getResultsData = async (
                           100,
                         ],
                       },
-                      2,
+                      1,
                     ],
                   },
                   "---",
@@ -261,7 +214,6 @@ const updateResult = async (req: NextApiRequest, res: NextApiResponse) => {
 
   examData.score = studentScore;
 
-  //console.log(examData);
   await examData.save();
 
   return res.status(200).json({ msg: MESSAGES.EXAM_SUCCESSFUL });
@@ -275,4 +227,79 @@ const deleteResult = async (req: NextApiRequest, res: NextApiResponse) => {
   if (deleted.deletedCount && deleted.deletedCount > 0)
     return res.status(200).json({ msg: MESSAGES.RESULT_DELETED });
   else return res.status(404).json({ msg: MESSAGES.RESULT_NOT_FOUND });
+};
+
+const resultChecker = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { phoneNumber } = req.body;
+  if (!phoneNumber) return res.status(400).json({ msg: MESSAGES.BAD_REQUEST });
+
+  const pipelines = [
+    {
+      $match: {
+        $or: [{ phoneNumber: phoneNumber }],
+      },
+    },
+    {
+      $lookup: {
+        from: "results",
+        let: { id: "$_id" },
+        as: "results",
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [{ $eq: ["$student", "$$id"] }, { $gt: ["$score", -1] }],
+              },
+            },
+          },
+          {
+            $lookup: {
+              from: "courses",
+              localField: "course",
+              foreignField: "_id",
+              as: "course",
+            },
+          },
+          {
+            $unwind: "$course",
+          },
+          {
+            $project: {
+              score: {
+                $cond: [
+                  { $gt: ["$score", 0] },
+                  {
+                    $round: [
+                      {
+                        $multiply: [
+                          { $divide: ["$score", "$course.questionNum"] },
+                          100,
+                        ],
+                      },
+                      1,
+                    ],
+                  },
+                  "0",
+                ],
+              },
+              course: "$course.title",
+            },
+          },
+        ],
+      },
+    },
+    {
+      $project: {
+        fullName: 1,
+        phoneNumber: 1,
+        results: 1,
+      },
+    },
+  ];
+
+  const studentResults = await Student.aggregate(pipelines);
+  if (studentResults && studentResults[0]?.results.length > 0)
+    return res.status(200).json({ result: studentResults[0] });
+
+  return res.status(404).json({ msg: MESSAGES.NO_RESULT });
 };

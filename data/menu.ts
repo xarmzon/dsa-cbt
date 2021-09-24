@@ -4,6 +4,7 @@ import {
   HiOutlineBookOpen,
   HiOutlineUserGroup,
   HiOutlineUsers,
+  HiOutlineChartSquareBar,
 } from "react-icons/hi";
 
 import { ROUTES, USER_TYPES } from "./../utils/constants";
@@ -27,9 +28,15 @@ export const menu: IMenu[] = [
     Icon: HiOutlineBookOpen,
   },
   {
+    link: ROUTES.STUDENTS,
+    for: USER_TYPES.ADMIN,
+    text: "Students",
+    Icon: HiOutlineUsers,
+  },
+  {
     link: ROUTES.RESULTS,
     for: USER_TYPES.ADMIN,
     text: "Results",
-    Icon: HiOutlineUsers,
+    Icon: HiOutlineChartSquareBar,
   },
 ];
