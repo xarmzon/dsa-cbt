@@ -5,7 +5,7 @@ import { HiOutlineBookOpen, HiOutlineUsers } from "react-icons/hi";
 import useSWR from "swr";
 import { ROUTES } from "../utils/constants";
 import dateformat from "dateformat";
-
+import LinkButton, { ETypes } from "../components/general/LinkButton";
 export type Color = "primary" | "green" | "red" | "yellow";
 export interface CardProps {
   head: string;
@@ -200,6 +200,19 @@ const Dashboard = () => {
                     ]
               }
             />
+            <div className="mt-4 text-sm items-center flex space-x-1 flex-wrap">
+              <LinkButton
+                href={ROUTES.RESULTS}
+                txt="Manage"
+                type={ETypes.TEXT}
+              />
+              <span className="text-gray-400">|</span>
+              <LinkButton
+                href={ROUTES.RESULTS_CHECKER}
+                txt="Checker"
+                type={ETypes.TEXT}
+              />
+            </div>
           </RecentCard>
           <RecentCard header="Recent Students">
             <ListData
