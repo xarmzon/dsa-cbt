@@ -8,6 +8,7 @@ import { APP_NAME, ROUTES } from "../utils/constants";
 import { connectDB } from "../utils/database";
 import { SelectOptionProps } from "../components/controls/Select";
 import { useState } from "react";
+import Logo from "../components/general/Logo";
 
 export interface ICourse extends SelectOptionProps {}
 
@@ -22,6 +23,9 @@ const Home = ({ courses }) => {
   return (
     <div className="bg-book bg-no-repeat bg-cover bg-primary bg-blend-multiply backdrop-filter backdrop-blur-sm flex flex-col items-center justify-center min-h-screen p-5">
       <NextSeo title="Home" />
+      <div className="flex justify-center w-full mb-4">
+        <Logo size="large" rounded />
+      </div>
       <div className="text-primary space-y-4 w-full max-w-lg min-h-[300px] bg-gray-50 bg-opacity-95 backdrop-filter backdrop-blur-sm p-5 rounded-md">
         <h1 className="text-center text-ascent md:text-lg pt-3">
           WELCOME TO <br />

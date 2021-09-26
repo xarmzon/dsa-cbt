@@ -90,6 +90,7 @@ const LoginForm = ({ courses }) => {
               fullName: formData.fullName.value,
               phoneNumber: formData.phoneNumber.value,
               course: formData.course.value,
+              type: "exam",
             });
             setResMsg((prev) => ({
               ...prev,

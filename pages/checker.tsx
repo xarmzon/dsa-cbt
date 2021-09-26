@@ -60,7 +60,7 @@ const ResultChecker = () => {
           setResultsData(null);
           setSubmitText("Loading...");
           const { data } = await api.post(ROUTES.API.RESULT, {
-            reg: phoneNumber.value,
+            phoneNumber: phoneNumber.value,
           });
           console.log(data.result);
           setResultsData(data.result);
