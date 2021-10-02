@@ -443,7 +443,7 @@ const Students = () => {
                           d.fullName,
                           d.phoneNumber,
                           <p>
-                            {d.courseSelections.split(",").map((d, i) => (
+                            {d.courseSelections.split(";").map((d, i) => (
                               <p key={i}>{d}</p>
                             ))}
                           </p>,
