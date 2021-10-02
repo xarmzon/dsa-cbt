@@ -76,7 +76,7 @@ const uploadStudents = async (req: NextApiRequest, res: NextApiResponse) => {
       courseSelections: d["Courses To Registered"]
         .split(",")
         .map((d, i) => d.trim().toUpperCase())
-        .join(","),
+        .join(";"),
       phoneNumber:
         d["Phone Number"].length < 11
           ? "0" + d["Phone Number"]
@@ -161,9 +161,9 @@ const addStudent = async (req: NextApiRequest, res: NextApiResponse) => {
       fullName: formatFullName(fullName),
       phoneNumber,
       courseSelections: courseSelections
-        .split(",")
+        .split(";")
         .map((d, i) => d.trim().toUpperCase())
-        .join(","),
+        .join(";"),
     });
   } else {
     return res.status(400).json({ msg: MESSAGES.ACCOUNT_EXIST });
@@ -232,9 +232,9 @@ const updateStudent = async (req: NextApiRequest, res: NextApiResponse) => {
   studentData.fullName = formatFullName(fullName);
   studentData.phoneNumber = phoneNumber;
   studentData.courseSelections = courseSelections
-    .split(",")
+    .split(";")
     .map((d, i) => d.trim().toUpperCase())
-    .join(",");
+    .join(";");
 
   await studentData.save();
   return res.status(200).json({ msg: MESSAGES.STUDENT_UPDATED });

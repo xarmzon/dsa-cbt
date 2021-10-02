@@ -382,7 +382,7 @@ const Students = () => {
               <Input
                 error={formDataError.courseSelections}
                 type="text"
-                placeholder="Enter the course separated by comma(,)"
+                placeholder="Enter the course separated by ;"
                 showLabel
                 labelValue="Course Selections"
                 name="courseSelections"
