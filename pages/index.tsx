@@ -40,6 +40,11 @@ const Home = ({ courses }) => {
         <p className="text-sm text-center text-secondary">
           In order to have access to the questions, please provide the details
           below.
+		  <LinkButton
+            href={ROUTES.RESULTS_CHECKER}
+            txt=" OR check your results here"
+            type={ETypes.TEXT}
+          />
           {/* Then follow by the type of exam you want to do. */}
         </p>
         <LoginForm courses={coursesData} />
