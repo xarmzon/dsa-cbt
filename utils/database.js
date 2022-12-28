@@ -14,3 +14,6 @@ export const connectDB = async () => {
   );
   return db;
 };
+
+// pwd: wb0iqDRt9HpsTjFa
+//db: DsaCbt?retryWrites=true&w=majority
